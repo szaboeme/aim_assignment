@@ -3,56 +3,144 @@ import matplotlib.pyplot as plt
 import scipy.io as sio
 import os.path
 import itertools
+import sys
 
-def nonlincontrast(value, alpha):
-    gamma = 1 / (1 - alpha)
-    if value < 0.5:
-        newvalue = 0.5 * pow(2*value, gamma)
-    else:
-        newvalue = 1 - (0.5 * pow(2 - 2*value, gamma))
+# generate negative image
+def negative(im):
+    n = im.shape[0]
+    res = im.copy()
+    for i in range(0, n):
+        for j in range(0, n):
+            res[i, j] = (1 - im[i, j])
+    plt.imsave('result/negative.png', res)
 
-    return newvalue
-
-if __name__ ==  "__main__":
-    # read image
-    img = plt.imread( 'Lena.png' )
-    
-    # show original
-    plt.imshow( img )
-
-    neg = img.copy()
-    tresh = img.copy()
-    bri = img.copy()
-    cont = img.copy()
-    gamma = img.copy()
-    nl_cont = img.copy()
-
-    # modify image
-    for i in range(0, 256):
-        for j in range(0, 256):
-            # negatice image
-            neg[i, j] = (1 - img[i, j])
-            # threshold = 0.5
-            if img[i, j, 0] < 0.5:
-                tresh[i, j, :] = 0
+# image thresholding
+def threshold(im, t):
+    n = im.shape[0]
+    res = im.copy()
+    for i in range(0, n):
+        for j in range(0, n):
+            if im[i, j, 0] < t:
+                res[i, j, :] = 0
             else:
-                tresh[i, j, :] = 1
-            # brightness +0.2
-            v = img[i, j, 0] + 0.2
-            bri[i, j, :] = max(min(v, 1), 0)
-            # contrast 1.25
-            v = img[i, j, 0] * 1.25
-            cont[i, j, :] = max(min(v, 1), 0)
-            # gamma 2.0
-            gamma[i, j] = pow(img[i, j], 0.5)
-            # non-linear contrast
-            nl_cont[i, j, :] = nonlincontrast(img[i, j, 0], 0.5)
+                res[i, j, :] = 1
+    plt.imsave('result/treshold.png', res)
 
+# brightness
+def brightness(im, b):
+    n = im.shape[0]
+    res = im.copy()
+    for i in range(0, n):
+        for j in range(0, n):
+            v = im[i, j, 0] + b
+            res[i, j, :] = max(min(v, 1), 0)
+    plt.imsave('result/brightness.png', res)
 
-    # save new images
-    plt.imsave('negative.png', neg)
-    plt.imsave('treshold.png', tresh)
-    plt.imsave('brightness.png', bri)
-    plt.imsave('contrast.png', cont)
-    plt.imsave('gamma.png', gamma)
-    plt.imsave('nl_contrast.png', nl_cont)
+# contrast
+def contrast(im, c):
+    n = im.shape[0]
+    res = im.copy()
+    for i in range(0, n):
+        for j in range(0, n):
+            v = im[i, j, 0] * c
+            res[i, j, :] = max(min(v, 1), 0)
+    plt.imsave('result/contrast.png', res)
+
+# gamma correction
+def gamma(im, g):
+    n = im.shape[0]
+    res = im.copy()
+    for i in range(0, n):
+        for j in range(0, n):
+            res[i, j] = pow(im[i, j], g)
+    plt.imsave('result/gamma.png', res)
+
+# non-linear contrast
+def nonlincontrast(im, alpha):
+    gamma = 1 / (1 - alpha)
+    n = im.shape[0]
+    res = im.copy()
+    for i in range(0, n):
+        for j in range(0, n):
+            if im[i, j, 0] < 0.5:
+                newvalue = 0.5 * pow(2*im[i, j, 0], gamma)
+            else:
+                newvalue = 1 - (0.5 * pow(2 - 2*im[i, j, 0], gamma))
+            res[i, j] = newvalue
+    plt.imsave('result/nonlin_contrast.png', res)
+
+# check user value for operation, exit if wrong
+def checkval(value, lo, hi):
+    if value < lo or value > hi:
+        try:
+            sys.exit(0)
+        finally:
+            print("Invalid value! Exiting.")
+
+if __name__ ==  "__main__":    
+    print("Welcome to PPAFMO (Primitive Python Application For Monadic Operations)!")
+
+    img_name = input("Please provide image name to be loaded: ")
+    # check if existing image
+    if not os.path.isfile(img_name):
+        try:
+            sys.exit(0)
+        finally:
+            print("Invalid file name! Exiting.")
+
+    # read image
+    #img = plt.imread( 'Lena.png' )
+    img = plt.imread( img_name )
+
+    # show original
+    plt.suptitle("Loaded image")
+    plt.imshow( img )
+    plt.show()
+
+    print("Select desired image operation. Type in ")
+    print("  neg   for negative image")
+    print("  tr    for tresholding")
+    print("  br    for brightness change")
+    print("  con   for contrast change")
+    print("  gam   for gamma correction")
+    print("  nlc   for non-linear contrast change")
+    op = input("I want to do: ")
+
+    # decide what to do
+    # negative
+    if op == 'neg':
+        negative(img)
+    # threshold
+    elif op == 'tr':
+        val = float(input("Provide threshold value: "))
+        checkval(val, 0.0, 1.0)
+        threshold(img, val)
+    # brightness
+    elif op == 'br':
+        val = float(input("Provide brightness value: "))
+        checkval(val, -1.0, 1.0)
+        brightness(img, val)
+    # contrast
+    elif op == 'con':
+        val = float(input("Provide contrast value: "))
+        checkval(val, 0.0, 1000.0)
+        contrast(img, val)
+    # gamma 
+    elif op == 'gam':
+        val = float(input("Provide gamma value: "))
+        checkval(val, 0.0, 1000.0)
+        gamma(img, val)
+    # non-linear contrast
+    elif op == 'nlc':
+        val = float(input("Provide alpha value: "))
+        checkval(val, 0.0, 1.0)
+        nonlincontrast(img, val)
+    # non-existent operation
+    else:
+        try:
+            sys.exit(0)
+        finally:
+            print("Invalid operation! Exiting.")
+
+    # operation ok
+    print("Done! Result saved to 'result/operation_name.png'.")
