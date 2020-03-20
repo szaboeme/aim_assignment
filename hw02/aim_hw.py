@@ -28,7 +28,7 @@ if __name__ ==  "__main__":
     if (img.ndim > 2):
         img = img[:,:,0] # take one channel only
 
-    fig = plt.figure()
+    # fig = plt.figure()
 
     plt.subplot(131), plt.imshow(img, cmap='gray'), plt.title("Original"), plt.axis('off')
 
@@ -46,9 +46,12 @@ if __name__ ==  "__main__":
 
     plt.subplot(133), plt.imshow(fimg, cmap='gray'), plt.title("Spectrum with shift"), plt.axis('off')
 
-    plt.show()
-
     # save shifted spectrum image
     plt.imsave('results/'+img_name+'_spectrum.png', fimg, cmap='gray')
     # save full figure with original image and spectrum side by side
-    # plt.savefig('results/'+img_name+'_figure.png')
+    plt.savefig('results/'+img_name+'_figure.png')
+
+    print("Done! See the results/ folder for the saved figure.")
+
+    # show figure
+    plt.show()
