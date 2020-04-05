@@ -34,14 +34,14 @@ if __name__ ==  "__main__":
 
     f = np.fft.fft2(img)
     fabs = np.abs(f)
-    flog = np.log(fabs)
+    flog = np.log(1 + fabs)
     fimg = flog / np.max(flog)
 
     plt.subplot(132), plt.imshow(fimg, cmap='gray'), plt.title("Spectrum"), plt.axis('off')
 
     fshift = np.fft.fftshift(f)
     fabs = np.abs(fshift)
-    flog = np.log(fabs)
+    flog = np.log(1 + fabs)
     fimg = flog / np.max(flog)
 
     plt.subplot(133), plt.imshow(fimg, cmap='gray'), plt.title("Spectrum with shift"), plt.axis('off')
