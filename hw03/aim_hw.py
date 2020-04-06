@@ -57,14 +57,6 @@ if __name__ ==  "__main__":
     imsize = img.shape[0]
     pad = int(fsize/2)
 
-    # image padding, so it stays the same size after convolution
-    padded = np.hstack([np.zeros((imsize, pad)), img, np.zeros((imsize, pad))])
-    padded = np.vstack([np.zeros((pad, imsize+pad*2)), padded, np.zeros((pad, imsize+pad*2))])
-
-    #plt.subplot(122), plt.imshow(padded, cmap='gray'), plt.title("Padded"), plt.axis('off')
-
-    #plt.show()
-
     # padding in one direction
     leftpadding = []
     rightpadding = []
@@ -72,24 +64,24 @@ if __name__ ==  "__main__":
         leftpadding.append(img[:, 0])
         rightpadding.append(img[:, imsize-1])
 
-    leftpadding = np.reshape(np.array(leftpadding), (imsize, pad))
-    rightpadding = np.reshape(np.array(rightpadding), (imsize, pad))
+    leftpadding = np.reshape(np.transpose(np.array(leftpadding)), (imsize, pad))
+    rightpadding = np.reshape(np.transpose(np.array(rightpadding)), (imsize, pad))
     padded = np.hstack([leftpadding, img, rightpadding])
     result = padded.copy()
-    #result2 = padded.copy()
 
     # apply in one direction
     for i in range(imsize):
         for j in range(pad, imsize+pad):
-            part = result[i, j-pad:j+pad+1] 
+            #part = result[i, j-pad:j+pad+1] 
             #part = padded[i-pad:i+pad+1, j]
             #r = part @ np.transpose(filter)
             r = 0
             for k in range(fsize):
-                r += part[k] * filter[k]
+                r += result[i, j-pad+k] * filter[k]
             result[i, j] = r
 
     result = result[:, pad:imsize+pad]
+    plt.imsave('results/'+img_name+'1dir'+'_sig'+str(sig)+'_size'+str(fsize)+'.png', result, cmap='gray')
     plt.subplot(132), plt.imshow(result, cmap='gray'), plt.title("One direction"), plt.axis('off')
 
     leftpadding = []
@@ -107,12 +99,12 @@ if __name__ ==  "__main__":
     # apply in other direction
     for i in range(pad, imsize+pad):
         for j in range(imsize):
-            part = padded[i-pad:i+pad+1, j]
+            #part = padded[i-pad:i+pad+1, j]
             #part = result[i, j-pad:j+pad+1] 
             #r = filter @ part
             r = 0
             for k in range(fsize):
-                r += part[k] * filter[k]
+                r += padded[i-pad+k, j] * filter[k]
             result2[i, j] = r
 
     result2 = result2[pad:imsize+pad, :]
