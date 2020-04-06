@@ -48,8 +48,16 @@ if __name__ ==  "__main__":
     sig = float(input("\nSigma value: "))
     fsize = int(input("\nFilter size: "))
 
+    #sig = 5.0
+    #fsize = 31
+
     # create 1D filter
     filter = gauss1d(sig, fsize)
+    #filter = [0.0009,0.001604,0.002748,0.004523,0.007154,0.010873,0.01588,0.022285,0.030051,
+    #          0.038941,0.048488,0.058016,0.066703,0.073694,0.078235,0.07981,0.078235,0.073694,
+    #          0.066703,0.058016,0.048488,0.038941,0.030051,0.022285,0.01588,0.010873,0.007154,
+    #          0.004523,0.002748,0.001604,0.0009]
+
     #print(filter)
 
     plt.subplot(131), plt.imshow(img, cmap='gray'), plt.title("Original"), plt.axis('off')
@@ -77,7 +85,7 @@ if __name__ ==  "__main__":
             #r = part @ np.transpose(filter)
             r = 0
             for k in range(fsize):
-                r += result[i, j-pad+k] * filter[k]
+                r += padded[i, j-pad+k] * filter[k]
             result[i, j] = r
 
     result = result[:, pad:imsize+pad]
