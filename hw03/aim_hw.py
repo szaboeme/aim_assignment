@@ -89,7 +89,9 @@ if __name__ ==  "__main__":
             result[i, j] = r
 
     result = result[:, pad:imsize+pad]
-    plt.imsave('results/'+img_name+'1dir'+'_sig'+str(sig)+'_size'+str(fsize)+'.png', result, cmap='gray')
+    res_scaled = 255.0 * result
+
+    #plt.imsave('results/'+img_name+'1dir'+'_sig'+str(sig)+'_size'+str(fsize)+'.png', res_scaled,  vmin=0, vmax=255, cmap='gray')
     plt.subplot(132), plt.imshow(result, cmap='gray'), plt.title("One direction"), plt.axis('off')
 
     leftpadding = []
@@ -118,8 +120,9 @@ if __name__ ==  "__main__":
     result2 = result2[pad:imsize+pad, :]
     plt.subplot(133), plt.imshow(result2, cmap='gray'), plt.title("Both directions"), plt.axis('off')
 
+    res2_scaled = 255.0 * result2
     # save shifted spectrum image
-    plt.imsave('results/'+img_name+'_sig'+str(sig)+'_size'+str(fsize)+'.png', result2, cmap='gray')
+    plt.imsave('results/'+img_name+'_sig'+str(sig)+'_size'+str(fsize)+'.png', res2_scaled, vmin=0, vmax=255, cmap='gray')
     # save full figure with original image and spectrum side by side
     # plt.savefig('results/'+img_name+'_full.png')
 
