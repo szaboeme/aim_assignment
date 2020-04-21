@@ -46,7 +46,7 @@ if __name__ == "__main__":
     for i in imgs:
         print(i)
     #img_name = input("\nSelected image name (without '.png'): ")
-    img_name = "cat2"
+    img_name = "noisy"
     file_name = "images/" + img_name + ".png"
 
     # check if existing image
@@ -63,12 +63,12 @@ if __name__ == "__main__":
     if (img.ndim > 2):
         img = img[:,:,0] # take one channel only
 
-    #sigg = float(input("\nSigma value for 2D kernel (G): "))
-    #sigb = float(input("\nSigma value for 1D kernel (b): "))
-    #fsize = int(input("\nFilter size: "))
+    sigg = float(input("\nSigma value for 2D kernel (G): "))
+    sigb = float(input("\nSigma value for 1D kernel (b): "))
+    fsize = int(input("\nFilter size: "))
     #sigg = 10.0 
     #sigb = 100.0 
-    fsize = 7
+    #fsize = 15
 
     # create filter
     #filter = gauss2d(sig, fsize)
@@ -99,45 +99,49 @@ if __name__ == "__main__":
 
     padded = np.vstack([leftpadding, result, rightpadding])
     result2 = padded.copy()
-    result2 = apply(result2, pad, fsize, 1.0, 30.0)
+    #sigg = 3.0
+    #sigb = 30.0
+    result2 = apply(result2, pad, fsize, sigg, sigb)
     result2 = result2[pad:imsize + pad, pad:imsize + pad]
     
     #plt.subplot(131), plt.imshow(result2, cmap='gray'), plt.title("$/sigma_G$=" + str(sigg) + " $/sigma_b$=" + str(sigb)), plt.axis('off')
     plt.subplots_adjust(wspace=0.1, hspace=0.1)
-
-    plt.subplot(331), plt.imshow(result2, cmap='gray'), plt.axis('off')
+    plt.subplot(121), plt.imshow(img, cmap='gray'), plt.title("original"), plt.axis('off')
+    plt.subplot(122), plt.imshow(result2, cmap='gray'), plt.title("filtered"), plt.axis('off')
+    #plt.subplot(331), plt.imshow(result2, cmap='gray'), plt.axis('off')
     
     res2_scaled = 255.0 * result2
-    #plt.imsave('results/' + img_name + '_sig' + str(sigg) + '_sigb' + str(sigb) + '.png', res2_scaled, vmin=0, vmax=255, cmap='gray')
+    plt.imsave('results/' + img_name + '_sig' + str(sigg) + '_sigb' + str(sigb) + '_f' + str(fsize) + '.png', res2_scaled, vmin=0, vmax=255, cmap='gray')
+    #plt.imsave('results/' + img_name + '_sigg_sigb.png', res2_scaled, vmin=0, vmax=255, cmap='gray')
     
-    result2 = apply(padded.copy(), pad, fsize, 1.0, 100.0)
-    plt.subplot(332), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
+    #result2 = apply(padded.copy(), pad, fsize, 1.0, 100.0)
+    #plt.subplot(332), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
 
-    result2 = apply(padded.copy(), pad, fsize, 1.0, 300.0)
-    plt.subplot(333), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
+    #result2 = apply(padded.copy(), pad, fsize, 1.0, 300.0)
+    #plt.subplot(333), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
 
     #second row
-    result2 = apply(padded.copy(), pad, fsize, 3.0, 30.0)
-    plt.subplot(334), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
+    #result2 = apply(padded.copy(), pad, fsize, 3.0, 30.0)
+    #plt.subplot(334), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
 
-    result2 = apply(padded.copy(), pad, fsize, 3.0, 100.0)
-    plt.subplot(335), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
+    #result2 = apply(padded.copy(), pad, fsize, 3.0, 100.0)
+    #plt.subplot(335), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
 
-    result2 = apply(padded.copy(), pad, fsize, 3.0, 300.0)
-    plt.subplot(336), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
+    #result2 = apply(padded.copy(), pad, fsize, 3.0, 300.0)
+    #plt.subplot(336), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
 
     # third row
-    result2 = apply(padded.copy(), pad, fsize, 10.0, 30.0)
-    plt.subplot(337), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
+    #result2 = apply(padded.copy(), pad, fsize, 10.0, 30.0)
+    #plt.subplot(337), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
 
-    result2 = apply(padded.copy(), pad, fsize, 10.0, 100.0)
-    plt.subplot(338), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
+    #result2 = apply(padded.copy(), pad, fsize, 10.0, 100.0)
+    #plt.subplot(338), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
 
-    result2 = apply(padded.copy(), pad, fsize, 10.0, 300.0)
-    plt.subplot(339), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
+    #result2 = apply(padded.copy(), pad, fsize, 10.0, 300.0)
+    #plt.subplot(339), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off')
 
     print("Done! See the results/ folder for the saved image.")
-    plt.savefig('results/'+img_name+'_full.png')
+    plt.savefig('results/'+img_name+'_full_'+str(sigg)+'_'+str(sigb)+'_f'+str(fsize)+'.png')
 
     # show figure
     plt.show()
