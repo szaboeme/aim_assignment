@@ -40,8 +40,8 @@ if __name__ == "__main__":
     print("\nPlease choose an image from the list to be loaded:\n")
     for i in imgs:
         print(i)
-    img_name = input("\nSelected image name (without '.png'): ")
-    #img_name = "lena"
+    #img_name = input("\nSelected image name (without '.png'): ")
+    img_name = "noisy"
     file_name = "images/" + img_name + ".png"
 
     # check if existing image
@@ -58,12 +58,12 @@ if __name__ == "__main__":
     if (img.ndim > 2):
         img = img[:,:,0] # take one channel only
 
-    sigg = float(input("\nSigma value for 2D kernel (G): "))
-    sigb = float(input("\nSigma value for 1D kernel (b): "))
-    fsize = int(input("\nFilter size: "))
-    #sigg = 1.0 
-    #sigb = 30.0 
-    #fsize = 7
+    #sigg = float(input("\nSigma value for 2D kernel (G): "))
+    #sigb = float(input("\nSigma value for 1D kernel (b): "))
+    #fsize = int(input("\nFilter size: "))
+    sigg = 1.0 
+    sigb = 300.0 
+    fsize = 7
 
     imsize = img.shape[0]
     pad = int(fsize/2)
