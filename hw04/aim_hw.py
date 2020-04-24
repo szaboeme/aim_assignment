@@ -40,8 +40,8 @@ if __name__ == "__main__":
     print("\nPlease choose an image from the list to be loaded:\n")
     for i in imgs:
         print(i)
-    #img_name = input("\nSelected image name (without '.png'): ")
-    img_name = "noisy"
+    img_name = input("\nSelected image name (without '.png'): ")
+    #img_name = "lena"
     file_name = "images/" + img_name + ".png"
 
     # check if existing image
@@ -58,12 +58,12 @@ if __name__ == "__main__":
     if (img.ndim > 2):
         img = img[:,:,0] # take one channel only
 
-    #sigg = float(input("\nSigma value for 2D kernel (G): "))
-    #sigb = float(input("\nSigma value for 1D kernel (b): "))
-    #fsize = int(input("\nFilter size: "))
-    sigg = 1.0 
-    sigb = 300.0 
-    fsize = 7
+    sigg = float(input("\nSigma value for 2D kernel (G): "))
+    sigb = float(input("\nSigma value for 1D kernel (b): "))
+    fsize = int(input("\nFilter size: "))
+    #sigg = 10.0
+    #sigb = 1.0
+    #fsize = 7
 
     imsize = img.shape[0]
     pad = int(fsize/2)
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     result2 = padded.copy()
 
     # change range from 0-1 to 0-255
-    result2 *= 255.0
+    #result2 *= 255.0
     result2 = apply(result2, pad, fsize, sigg, sigb)
     result2 = result2[pad:imsize + pad, pad:imsize + pad]
     
@@ -102,7 +102,8 @@ if __name__ == "__main__":
     #plt.subplot(331), plt.imshow(result2, cmap='gray'), plt.axis('off'), plt.title("1/30")
     
     res2_scaled = result2 # * 255.0
-    plt.imsave('results/images/' + img_name + '_sig' + str(sigg) + '_sigb' + str(sigb) + '_f' + str(fsize) + '.png', res2_scaled, vmin=0, vmax=255, cmap='gray')
+    plt.imsave('results/' + img_name + '_sig' + str(sigg) + '_sigb' + str(sigb) + '_f' + str(fsize) + '.png', res2_scaled, cmap='gray')
+    #plt.imsave('results/images/' + img_name + '_sig' + str(sigg) + '_sigb' + str(sigb) + '_f' + str(fsize) + '.png', res2_scaled, vmin=0, vmax=255, cmap='gray')
     #plt.imsave('results/' + img_name + '_sigg_sigb.png', res2_scaled, vmin=0, vmax=255, cmap='gray')
     
     #result2 = apply(padded.copy(), pad, fsize, 1.0, 100.0)
@@ -126,8 +127,8 @@ if __name__ == "__main__":
     #result2 = apply(padded.copy(), pad, fsize, 10.0, 300.0)
     #plt.subplot(339), plt.imshow(result2[pad:imsize+pad, pad:imsize+pad], cmap='gray'), plt.axis('off'),plt.title("10/300")
 
-    print("Done! See the results/ folder for the saved image.")
-    plt.savefig('results/'+img_name+'_full_'+str(sigg)+'_'+str(sigb)+'_f'+str(fsize)+'.png')
+    print("Done! See the results/images/ folder for the saved image.")
+    #plt.savefig('results/'+img_name+'_full_'+str(sigg)+'_'+str(sigb)+'_f'+str(fsize)+'.png')
     #plt.savefig('results/'+img_name+'_big_figure.png')
 
     # show figure
