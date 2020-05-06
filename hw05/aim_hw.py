@@ -132,10 +132,14 @@ if __name__ == "__main__":
     #plt.show()
 
     # create the gradient of the desired image
-    gradX = imnorm(gradX1 + gradX2)
-    gradY = imnorm(gradY1 + gradY2)
-    #gradX = np.maximum(gradX1, gradX2)
-    #gradY = np.maximum(gradY1, gradY2)
+    #gradX = imnorm(gradX1 + gradX2)
+    #gradY = imnorm(gradY1 + gradY2)
+    gradX = np.maximum(gradX1, gradX2)
+    gradY = np.maximum(gradY1, gradY2)
+    #gradX = gradX1
+    #gradX[int(sizex/2):, :] = gradX2[int(sizex/2):, :]
+    #gradY = gradY1
+    #gradY[int(sizex/2):, :] = gradY2[int(sizex/2):, :]
 
     # check
     plt.imsave('results/gradxcomb.png', gradX, cmap='gray')
@@ -171,7 +175,7 @@ if __name__ == "__main__":
 
 
     it = 0
-    while it < 200:
+    while it < 300:
         for i in range(0,sizex-1):
             for j in range(0,sizey-1):
                 r = (result[i+1, j] + result[i-1, j] + result[i, j+1] + result[i, j-1])
