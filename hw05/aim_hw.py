@@ -131,13 +131,13 @@ if __name__ == "__main__":
     # use Gauss-Seidel iterations to reconstruct the image from gradient
     while it < 50000:
         it += 1
-        #for i in range(1,sizex - 1):
-        #    for j in range(1,sizey - 1):
-        #        result[i, j, 0] = 0.25 * (result[i + 1, j, 0] + result[i - 1, j, 0] + result[i, j + 1, 0] + result[i, j - 1, 0] - divG[i, j, 0])
-        #        result[i, j, 1] = 0.25 * (result[i + 1, j, 1] + result[i - 1, j, 1] + result[i, j + 1, 1] + result[i, j - 1, 1] - divG[i, j, 1])
-        #        result[i, j, 2] = 0.25 * (result[i + 1, j, 2] + result[i - 1, j, 2] + result[i, j + 1, 2] + result[i, j - 1, 2] - divG[i, j, 2])
+        for i in range(1,sizex - 1):
+            for j in range(1,sizey - 1):
+                result[i, j, 0] = 0.25 * (result[i + 1, j, 0] + result[i - 1, j, 0] + result[i, j + 1, 0] + result[i, j - 1, 0] - divG[i, j, 0])
+                result[i, j, 1] = 0.25 * (result[i + 1, j, 1] + result[i - 1, j, 1] + result[i, j + 1, 1] + result[i, j - 1, 1] - divG[i, j, 1])
+                result[i, j, 2] = 0.25 * (result[i + 1, j, 2] + result[i - 1, j, 2] + result[i, j + 1, 2] + result[i, j - 1, 2] - divG[i, j, 2])
 
-        result[1:-1, 1:-1, :] = 0.25 * (result[0:-2, 1:-1, :] + result[2: , 1:-1, :] + result[1:-1, 0:-2, :] + result[1:-1, 2: , :] - divG[1:-1,1:-1, :])
+        #result[1:-1, 1:-1, :] = 0.25 * (result[0:-2, 1:-1, :] + result[2: , 1:-1, :] + result[1:-1, 0:-2, :] + result[1:-1, 2: , :] - divG[1:-1,1:-1, :])
         
         if it % 10000 == 0:
             plt.imsave('results/res_' + img_name + '_' + str(it) + '.png', imnorm(result.copy()))
