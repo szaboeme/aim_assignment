@@ -9,9 +9,18 @@ import math
 
 # normalize image to 0..1 range
 def imnorm(img):
-    min = np.amin(img)
-    max = np.amax(img)
-    return (img - min) * (1.0 / (max - min))
+    minr = np.amin(img[:,:,0])
+    ming = np.amin(img[:,:,1])
+    minb = np.amin(img[:,:,2])
+    maxr = np.amax(img[:,:,0])
+    maxg = np.amax(img[:,:,1])
+    maxb = np.amax(img[:,:,2])
+    result = img.copy()
+    result[:,:,0] = (img[:,:,0] - minr) * (1.0 / (maxr - minr))
+    result[:,:,1] = (img[:,:,1] - ming) * (1.0 / (maxg - ming))
+    result[:,:,2] = (img[:,:,2] - minb) * (1.0 / (maxb - minb))
+    #result = (img - np.min(img)) * (1.0 / (np.max(img) - np.min(img)))
+    return result
 
 # computes normalized gradients from img
 def gradients(img):
@@ -24,14 +33,16 @@ def gradients(img):
 
     for i in range(sizex - 1):
         for j in range(sizey):
-            Gx[i,j] = img[i + 1,j] - img[i,j]
-    Gx[sizex - 1,:] = - img[-1,:]
+            Gx[i,j,0] = img[i + 1,j,0] - img[i,j,0]
+            Gx[i,j,1] = img[i + 1,j,1] - img[i,j,1]
+            Gx[i,j,2] = img[i + 1,j,2] - img[i,j,2]
 
     for i in range(sizex):
         for j in range(sizey - 1):
-            Gy[i, j] = img[i,j + 1] - img[i,j]
-    Gy[:,sizey - 1] = - img[:,-1]
-
+            Gy[i, j,0] = img[i,j + 1,0] - img[i,j,0]
+            Gy[i, j,1] = img[i,j + 1,1] - img[i,j,1]
+            Gy[i, j,2] = img[i,j + 1,2] - img[i,j,2]
+    
     return imnorm(Gx), imnorm(Gy)
 
 if __name__ == "__main__":
@@ -41,7 +52,7 @@ if __name__ == "__main__":
     for i in imgs:
         print(i)
     #img_name = input("\nSelected image name (without '.png'): ")
-    img_name = "tunder"
+    img_name = "under"
     file_name = "images/" + img_name + ".png"
     # check if existing image
     if not os.path.isfile(file_name):
@@ -51,7 +62,7 @@ if __name__ == "__main__":
             print("Invalid file name! Exiting.")
 
     #img_name2 = input("\nSelect another image (of the same size): ")
-    img_name2 = "tover"
+    img_name2 = "over"
     file_name2 = "images/" + img_name2 + ".png"
     # check if existing image
     if not os.path.isfile(file_name2):
@@ -76,26 +87,25 @@ if __name__ == "__main__":
     plt.imsave('results/grady2_' + img_name + '.png', gradY2, cmap='gray')
 
     # create the gradient of the desired image
-    gradX = np.zeros_like(gradX1)
-    gradY = np.zeros_like(gradY1)
-    for i in range(sizex):
-        for j in range(sizey):
-            # nr, ng, nb = sqrt(gx.r^2 + gy.r^2), sqrt(gx.g^2 + gy.g^2),
-            # sqrt(gx.b^2 + gy.b^2)
-            n1r = np.sqrt(gradX1[i,j,0] ** 2 + gradY1[i,j,0] ** 2)
-            n1g = np.sqrt(gradX1[i,j,1] ** 2 + gradY1[i,j,1] ** 2)
-            n1b = np.sqrt(gradX1[i,j,2] ** 2 + gradY1[i,j,2] ** 2)
-            n2r = np.sqrt(gradX2[i,j,0] ** 2 + gradY2[i,j,0] ** 2)
-            n2g = np.sqrt(gradX2[i,j,1] ** 2 + gradY2[i,j,1] ** 2)
-            n2b = np.sqrt(gradX2[i,j,2] ** 2 + gradY2[i,j,2] ** 2)
-            # red
-            if n1r + n1g + n1b < n2r + n2g + n2b:
-                gradX[i,j,:] = gradX2[i,j,:]
-                gradY[i,j,:] = gradY2[i,j,:]
-            else:
-                gradX[i,j,:] = gradX1[i,j,:]
-                gradY[i,j,:] = gradY1[i,j,:]
-
+    gradX = (gradX1)
+    gradY = (gradY1)
+    #for i in range(sizex):
+    #    for j in range(sizey):
+    #        # nr, ng, nb = sqrt(gx.r^2 + gy.r^2), sqrt(gx.g^2 + gy.g^2),
+    #        # sqrt(gx.b^2 + gy.b^2)
+    #        n1r = np.sqrt(gradX1[i,j,0] ** 2 + gradY1[i,j,0] ** 2)
+    #        n1g = np.sqrt(gradX1[i,j,1] ** 2 + gradY1[i,j,1] ** 2)
+    #        n1b = np.sqrt(gradX1[i,j,2] ** 2 + gradY1[i,j,2] ** 2)
+    #        n2r = np.sqrt(gradX2[i,j,0] ** 2 + gradY2[i,j,0] ** 2)
+    #        n2g = np.sqrt(gradX2[i,j,1] ** 2 + gradY2[i,j,1] ** 2)
+    #        n2b = np.sqrt(gradX2[i,j,2] ** 2 + gradY2[i,j,2] ** 2)
+    #        # red
+    #        if n1r + n1g + n1b < n2r + n2g + n2b:
+    #            gradX[i,j,:] = gradX2[i,j,:]
+    #            gradY[i,j,:] = gradY2[i,j,:]
+    #        else:
+    #            gradX[i,j,:] = gradX1[i,j,:]
+    #            gradY[i,j,:] = gradY1[i,j,:]
 
     # check
     plt.imsave('results/gradxcomb_' + img_name + '.png', gradX, cmap='gray')
@@ -105,29 +115,27 @@ if __name__ == "__main__":
     # compute divergence
     #divG = gx[x+1,y]-gx[x,y] + gy[x,y+1]-gy[x,y]
     divG = gradX.copy()
-    for i in range(1,sizex):
-        for j in range(1,sizey):
-            divG[i,j,0] = gradX[i,j,0] - gradX[i - 1,j,0] + gradY[i,j,0] - gradY[i,j - 1,0]
-            divG[i,j,1] = gradX[i,j,1] - gradX[i - 1,j,1] + gradY[i,j,1] - gradY[i,j - 1,1]
-            divG[i,j,2] = gradX[i,j,2] - gradX[i - 1,j,2] + gradY[i,j,2] - gradY[i,j - 1,2]
+    for i in range(sizex-1):
+        for j in range(sizey-1):
+            divG[i,j,0] = gradX[i,j,0] - gradX[i-1,j,0] + gradY[i,j,0] - gradY[i,j-1,0]
+            divG[i,j,1] = gradX[i,j,1] - gradX[i-1,j,1] + gradY[i,j,1] - gradY[i,j-1,1]
+            divG[i,j,2] = gradX[i,j,2] - gradX[i-1,j,2] + gradY[i,j,2] - gradY[i,j-1,2]
             
             #divG[i,j] = gradX[i+1,j] - gradX[i,j] + gradY[i,j+1] - gradY[i,j]
     
     # zero image with borders copied from the original
-    result = img1.copy()
+    #result = img1.copy()
+    result = np.zeros_like(img1)
     it = 0
 
     # use Gauss-Seidel iterations to reconstruct the image from gradient
     while it < 50000:
         it += 1
-        #for i in range(1,sizex-1):
-        #    for j in range(1,sizey-1):
-        #        result[i, j, 0] = 0.25 * (result[i+1, j, 0] + result[i-1, j,
-        #        0] + result[i, j+1, 0] + result[i, j-1, 0] - divG[i, j, 0])
-        #        result[i, j, 1] = 0.25 * (result[i+1, j, 1] + result[i-1, j,
-        #        1] + result[i, j+1, 1] + result[i, j-1, 1] - divG[i, j, 1])
-        #        result[i, j, 2] = 0.25 * (result[i+1, j, 2] + result[i-1, j,
-        #        2] + result[i, j+1, 2] + result[i, j-1, 2] - divG[i, j, 2])
+        #for i in range(1,sizex - 1):
+        #    for j in range(1,sizey - 1):
+        #        result[i, j, 0] = 0.25 * (result[i + 1, j, 0] + result[i - 1, j, 0] + result[i, j + 1, 0] + result[i, j - 1, 0] - divG[i, j, 0])
+        #        result[i, j, 1] = 0.25 * (result[i + 1, j, 1] + result[i - 1, j, 1] + result[i, j + 1, 1] + result[i, j - 1, 1] - divG[i, j, 1])
+        #        result[i, j, 2] = 0.25 * (result[i + 1, j, 2] + result[i - 1, j, 2] + result[i, j + 1, 2] + result[i, j - 1, 2] - divG[i, j, 2])
 
         result[1:-1, 1:-1, :] = 0.25 * (result[0:-2, 1:-1, :] + result[2: , 1:-1, :] + result[1:-1, 0:-2, :] + result[1:-1, 2: , :] - divG[1:-1,1:-1, :])
         
@@ -135,7 +143,7 @@ if __name__ == "__main__":
             plt.imsave('results/res_' + img_name + '_' + str(it) + '.png', imnorm(result.copy()))
 
     result = imnorm(result)
-    plt.imsave('results/res_' + img_name + str(it) + '.png', result)
+    plt.imsave('results/res_' + img_name + str(it) + '.png', (result))
     plt.imshow(result)
 
     print("Done! See the results/ folder for the saved image.")
