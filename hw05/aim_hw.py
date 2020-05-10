@@ -52,7 +52,7 @@ if __name__ == "__main__":
     for i in imgs:
         print(i)
     #img_name = input("\nSelected image name (without '.png'): ")
-    img_name = "sunder"
+    img_name = "under"
     file_name = "images/" + img_name + ".png"
     # check if existing image
     if not os.path.isfile(file_name):
@@ -62,7 +62,7 @@ if __name__ == "__main__":
             print("Invalid file name! Exiting.")
 
     #img_name2 = input("\nSelect another image (of the same size): ")
-    img_name2 = "sover"
+    img_name2 = "over"
     file_name2 = "images/" + img_name2 + ".png"
     # check if existing image
     if not os.path.isfile(file_name2):
@@ -120,11 +120,9 @@ if __name__ == "__main__":
             divG[i,j,0] = gradX[i,j,0] - gradX[i-1,j,0] + gradY[i,j,0] - gradY[i,j-1,0]
             divG[i,j,1] = gradX[i,j,1] - gradX[i-1,j,1] + gradY[i,j,1] - gradY[i,j-1,1]
             divG[i,j,2] = gradX[i,j,2] - gradX[i-1,j,2] + gradY[i,j,2] - gradY[i,j-1,2]
-            
             #divG[i,j] = gradX[i+1,j] - gradX[i,j] + gradY[i,j+1] - gradY[i,j]
     
     # zero image with borders copied from the original
-    #result = img1.copy()
     result = np.zeros_like(img2)
     result[0,:,:] = img2[0,:,:]
     result[:,0,:] = img2[:,0,:]
@@ -133,15 +131,15 @@ if __name__ == "__main__":
     it = 0
 
     # use Gauss-Seidel iterations to reconstruct the image from gradient
-    while it < 200000:
+    while it < 50000:
         it += 1
-        #for i in range(1,sizex - 1):
-        #    for j in range(1,sizey - 1):
-        #        result[i, j, 0] = 0.25 * (result[i + 1, j, 0] + result[i - 1, j, 0] + result[i, j + 1, 0] + result[i, j - 1, 0] - divG[i, j, 0])
-        #        result[i, j, 1] = 0.25 * (result[i + 1, j, 1] + result[i - 1, j, 1] + result[i, j + 1, 1] + result[i, j - 1, 1] - divG[i, j, 1])
-        #        result[i, j, 2] = 0.25 * (result[i + 1, j, 2] + result[i - 1, j, 2] + result[i, j + 1, 2] + result[i, j - 1, 2] - divG[i, j, 2])
+        for i in range(1,sizex - 1):
+            for j in range(1,sizey - 1):
+                result[i, j, 0] = 0.25 * (result[i + 1, j, 0] + result[i - 1, j, 0] + result[i, j + 1, 0] + result[i, j - 1, 0] - divG[i, j, 0])
+                result[i, j, 1] = 0.25 * (result[i + 1, j, 1] + result[i - 1, j, 1] + result[i, j + 1, 1] + result[i, j - 1, 1] - divG[i, j, 1])
+                result[i, j, 2] = 0.25 * (result[i + 1, j, 2] + result[i - 1, j, 2] + result[i, j + 1, 2] + result[i, j - 1, 2] - divG[i, j, 2])
 
-        result[1:-1, 1:-1, :] = 0.25 * (result[0:-2, 1:-1, :] + result[2: , 1:-1, :] + result[1:-1, 0:-2, :] + result[1:-1, 2: , :] - divG[1:-1,1:-1, :])
+        #result[1:-1, 1:-1, :] = 0.25 * (result[0:-2, 1:-1, :] + result[2: , 1:-1, :] + result[1:-1, 0:-2, :] + result[1:-1, 2: , :] - divG[1:-1,1:-1, :])
         
         if it % 10000 == 0:
             plt.imsave('results/res_' + img_name + '_' + str(it) + '.png', imnorm(result))
