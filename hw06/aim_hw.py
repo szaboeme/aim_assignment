@@ -89,7 +89,7 @@ if __name__ == "__main__":
     for i in imgs:
         print(i)
     #img_name = input("\nSelected image name (without '.png'): ")
-    img_name = "house"
+    img_name = "girl"
     file_name = "images/" + img_name + ".png"
     # check if existing image
     if not os.path.isfile(file_name):
@@ -99,7 +99,7 @@ if __name__ == "__main__":
             print("Invalid file name! Exiting.")
 
     #img_name2 = input("\nScribble: ")
-    img_name2 = "scrib2"
+    img_name2 = "girlscrib"
     file_name2 = "images/" + img_name2 + ".png"
     # check if existing image
     if not os.path.isfile(file_name2):
