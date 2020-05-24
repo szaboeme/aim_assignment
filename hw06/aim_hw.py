@@ -16,27 +16,28 @@ def paint ( img, scrib, label1, label2, result ):
     G = nx.grid_2d_graph(sizex, sizey)
     G.remove_edges_from(G.edges())
     wmax = 0
+    K = 2000
     for i in range(sizex):
         for j in range(sizey):
             wm = 0
             # add edges
             if i > 0: # up
-                w = 1 + min( sum(img[i-1, j])/3, sum(img[i, j])/3)
+                w = 1 + K * min( sum(img[i-1, j])/3, sum(img[i, j])/3)**6
                 wm += w
                 G.add_edge( (i-1, j), (i, j), capacity=w )
                 G.add_edge( (i, j), (i-1, j), capacity=w )
             if i < sizex-1: # down
-                w = 1 + min( sum(img[i+1, j])/3, sum(img[i, j])/3)
+                w = 1 + K * min( sum(img[i+1, j])/3, sum(img[i, j])/3)**6
                 wm += w
                 G.add_edge( (i+1, j), (i, j), capacity=w )
                 G.add_edge( (i, j), (i+1, j), capacity=w )
             if j > 0: # left
-                w = 1 + min( sum(img[i, j-1])/3, sum(img[i, j])/3)
+                w = 1 + K * min( sum(img[i, j-1])/3, sum(img[i, j])/3)**6
                 wm += w
                 G.add_edge( (i, j), (i, j - 1), capacity=w )
                 G.add_edge( (i, j - 1), (i, j), capacity=w )
             if j < sizey-1: # right
-                w = 1 + min( sum(img[i, j+1])/3, sum(img[i, j])/3)
+                w = 1 + K * min( sum(img[i, j+1])/3, sum(img[i, j])/3)**6
                 wm += w
                 G.add_edge( (i, j), (i, j + 1), capacity=w )
                 G.add_edge( (i, j + 1), (i, j), capacity=w )
@@ -46,7 +47,7 @@ def paint ( img, scrib, label1, label2, result ):
     # add s and t nodes
     G.add_node('s')
     G.add_node('t')
-    wmax = wmax * 0.05 # lambda
+    wmax = K * 0.05 # lambda
 
     for i in range(sizex):
         for j in range(sizey):
@@ -89,7 +90,7 @@ if __name__ == "__main__":
     for i in imgs:
         print(i)
     #img_name = input("\nSelected image name (without '.png'): ")
-    img_name = "girl"
+    img_name = "deer"
     file_name = "images/" + img_name + ".png"
     # check if existing image
     if not os.path.isfile(file_name):
@@ -99,7 +100,7 @@ if __name__ == "__main__":
             print("Invalid file name! Exiting.")
 
     #img_name2 = input("\nScribble: ")
-    img_name2 = "girlscrib"
+    img_name2 = "deerscrib"
     file_name2 = "images/" + img_name2 + ".png"
     # check if existing image
     if not os.path.isfile(file_name2):
