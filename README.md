@@ -1,18 +1,19 @@
-# Advanced Interactive Image Editing course assignments
-# /hw01 
+<h3>Advanced Interactive Image Editing course assignments</h3>
+
+<h4>/hw01</h4>
 Basic image operations: negative, brightness, gamma, contrast, etc.
 
-# /hw02
+<h4>/hw02</h4>
 Fourier transform.
 
-# /hw03
+<h4>/hw03</h4>
 Gaussian convolution.
 
-# /hw04
+<h4>/hw04</h4>
 Bilateral image filter.
 
-# /hw05
+<h4>/hw05</h4>
 Gauss-Seidel iterations for composing correctly exposed image from an over and an under-exposed input.
 
-# /hw06
+<h4>/hw06</h4>
 Paint-like image coloring with basic segmentation.
