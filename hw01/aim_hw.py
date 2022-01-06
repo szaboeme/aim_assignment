@@ -17,13 +17,16 @@ def negative(im):
 # image thresholding
 def threshold(im, t):
     n = im.shape[0]
+    m = im.shape[1]
     res = im.copy()
     for i in range(0, n):
-        for j in range(0, n):
-            if im[i, j, 0] < t:
-                res[i, j, :] = 0
-            else:
+        for j in range(0, m):
+            if im[i, j, 0] > t or im[i, j, 1] > t or im[i, j, 2] > t:
                 res[i, j, :] = 1
+                res[i, j, 3] = 1
+            else:
+                res[i, j, :] = 0
+                im[i, j, 3] = 1
     plt.imsave('result/treshold.png', res)
 
 # brightness
@@ -93,9 +96,9 @@ if __name__ ==  "__main__":
     img = plt.imread( img_name )
 
     # show original
-    plt.suptitle("Loaded image")
-    plt.imshow( img )
-    plt.show()
+    # plt.suptitle("Loaded image")
+    # plt.imshow( img )
+    # plt.show()
 
     print("Select desired image operation. Type in ")
     print("  neg   for negative image")
